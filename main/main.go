@@ -20,6 +20,7 @@ func (this *MyHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	path := "public/" + req.URL.Path
 	f, err := os.Open(string(path))
 	if err == nil {
+
 		bufferedReader := bufio.NewReader(f)
 		var contentType string
 
@@ -31,11 +32,16 @@ func (this *MyHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			contentType = "application/javascript"
 		} else if strings.HasSuffix(path, ".png") {
 			contentType = "image/png"
+		} else if strings.HasSuffix(path, ".jpg") {
+			contentType = "image/jpg"
+		} else if strings.HasSuffix(path, ".gif") {
+			contentType = "image/gif"
 		}else {
 			contentType = "text/plain"
 		}
-		w.Header().Add("Content Type", contentType)
+		w.Header().Add("Content-Type", contentType)
 		bufferedReader.WriteTo(w)
+
 	}else {
 		w.WriteHeader(404)
 		w.Write([]byte("404-" + http.StatusText(404)))
